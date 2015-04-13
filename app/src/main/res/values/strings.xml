@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BlindCall</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="llamar">LLamar</string>
+    <string name="fin_llamada">Terminar llamada</string>
+
+</resources>
