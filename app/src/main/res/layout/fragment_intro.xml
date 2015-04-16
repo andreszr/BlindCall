@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:text="@string/llamar"
         android:id="@+id/buttonIntro"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="20dp" />
 </FrameLayout>
