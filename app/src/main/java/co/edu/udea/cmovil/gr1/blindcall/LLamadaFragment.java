@@ -16,7 +16,7 @@ public class LLamadaFragment extends Fragment implements View.OnClickListener {
 
     Button buttonEndCall;
     Button buttonLocation;
-    Button button3;
+    Button button2;
 
     public LLamadaFragment() {
         // Required empty public constructor
@@ -34,9 +34,11 @@ public class LLamadaFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_llamada, container, false);
         buttonEndCall = (Button) view.findViewById(R.id.buttonEndCall);
         buttonLocation = (Button) view.findViewById(R.id.buttonLocation);
+        button2 = (Button) view.findViewById(R.id.button2);
 
         buttonEndCall.setOnClickListener(this);
         buttonLocation.setOnClickListener(this);
+        button2.setOnClickListener(this);
 
         return view;
     }
@@ -46,10 +48,13 @@ public class LLamadaFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         System.out.println(v.getId());
         if(v.getId() == buttonEndCall.getId()){
+            Toast.makeText(getActivity(), "Termino llamada", Toast.LENGTH_SHORT).show();
             getActivity().startActivity(new Intent(getActivity(), IntroActivity.class));
-        } else if (v.getId() == buttonLocation.getId()){
-            Toast.makeText(getActivity(), "Envio posición", Toast.LENGTH_LONG).show();
 
+        } else if (v.getId() == buttonLocation.getId()){
+            Toast.makeText(getActivity(), "Envio posición", Toast.LENGTH_SHORT).show();
+        }else if (v.getId() == button2.getId()){
+            Toast.makeText(getActivity(), "Alguna funcionalidad", Toast.LENGTH_SHORT).show();
         }
     }
 }

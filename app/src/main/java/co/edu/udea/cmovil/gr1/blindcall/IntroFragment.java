@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class IntroFragment extends Fragment implements View.OnClickListener {
@@ -37,6 +38,7 @@ public class IntroFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Toast.makeText(getActivity(), "LLamando...", Toast.LENGTH_SHORT).show();
         getActivity().startActivity(new Intent(getActivity(), LLamadaActivity.class));
     }
 }
