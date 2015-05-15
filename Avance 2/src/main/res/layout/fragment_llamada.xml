@@ -1,0 +1,35 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.edu.udea.cmovil.gr1.blindcall.LLamadaFragment"
+    android:background="#ff020103">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/posicion"
+        android:id="@+id/buttonLocation"
+        android:layout_gravity="left|top"
+        android:background="#ffffbb0b"
+        android:layout_weight="2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/button2"
+        android:layout_gravity="right|top"
+        android:background="#ffe0ff35"
+        android:layout_weight="2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="359dp"
+        android:text="@string/fin_llamada"
+        android:id="@+id/buttonEndCall"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="#ffff2137" />
+
+</TableLayout>
