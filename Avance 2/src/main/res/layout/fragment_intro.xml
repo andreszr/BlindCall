@@ -4,5 +4,4 @@
     tools:context="co.edu.udea.cmovil.gr1.blindcall.IntroFragment"
     android:background="@mipmap/ui">
 
-
 </FrameLayout>

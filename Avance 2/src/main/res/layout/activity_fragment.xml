@@ -3,8 +3,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <fragment android:name="co.edu.udea.cmovil.gr1.blindcall.IntroFragment"
-        android:id="@+id/IntroFragment"
+    <fragment android:name="co.edu.udea.cmovil.gr1.blindcall.LLamadaFragment"
+        android:id="@+id/LLamadaFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -7,18 +7,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.speech.RecognizerIntent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
-public class IntroFragment extends Fragment {
-    public String phone;
-    Button buttonIntro;
+import java.util.ArrayList;
+
+public class IntroFragment extends Fragment{
 
     public IntroFragment() {
         // Required empty public constructor
@@ -31,16 +34,13 @@ public class IntroFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
 
-        //buttonIntro.setOnClickListener(this);
         return view;
     }
 
     public void nuevaLLamada(String phone){
-        Toast.makeText(getActivity(), "LLamando...", Toast.LENGTH_SHORT).show();
         //String url = "tel:3122782923";
         //Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
 
@@ -49,41 +49,15 @@ public class IntroFragment extends Fragment {
         telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
 
         try{
-            Intent intent =new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:3122782923"));
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + phone));
             startActivity(intent);
         }
         catch(ActivityNotFoundException e){
-            Toast toast = Toast.makeText(getActivity(), "No puedes hacer la llamada", Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getActivity(), "No puedes hacer la llamada", Toast.LENGTH_SHORT).show();
         }
-        //getActivity().startActivity(new Intent(getActivity(), LLamadaActivity.class));
     }
 
-
-   /* @Override
-    public void onClick(View v) {
-        Toast.makeText(getActivity(), "LLamando...", Toast.LENGTH_SHORT).show();
-        //String url = "tel:3122782923";
-        //Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
-
-        PhoneCallListener phoneListener = new PhoneCallListener();
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
-
-        try{
-            Intent intent =new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:3122782923"));
-            startActivity(intent);
-        }
-        catch(ActivityNotFoundException e){
-            Toast toast = Toast.makeText(getActivity(), "No puedes hacer la llamada", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-        //getActivity().startActivity(new Intent(getActivity(), LLamadaActivity.class));
-    }
-*/
     //monitor phone call activities
     private class PhoneCallListener extends PhoneStateListener {
 
@@ -95,11 +69,13 @@ public class IntroFragment extends Fragment {
 
             if (TelephonyManager.CALL_STATE_RINGING == state) {
                 // phone ringing
+                Toast.makeText(getActivity(), "Sonando", Toast.LENGTH_LONG).show();
                 Log.i(LOG_TAG, "RINGING, number: " + incomingNumber);
             }
 
             if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
                 // active
+                Toast.makeText(getActivity(), "fuera de gancho", Toast.LENGTH_LONG).show();
                 Log.i(LOG_TAG, "OFFHOOK");
                 isPhoneCalling = true;
             }
@@ -108,10 +84,13 @@ public class IntroFragment extends Fragment {
                 // run when class initial and phone call ended,
                 // need detect flag from CALL_STATE_OFFHOOK
                 Log.i(LOG_TAG, "IDLE");
+                Toast.makeText(getActivity(), "idle", Toast.LENGTH_LONG).show();
 
                 if (isPhoneCalling) {
 
                     Log.i(LOG_TAG, "restart app");
+                    Toast.makeText(getActivity(), "isPhoneCalling", Toast.LENGTH_LONG).show();
+
 
                     // restart app
                     Intent i = getActivity().getBaseContext().getPackageManager().getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
@@ -120,8 +99,8 @@ public class IntroFragment extends Fragment {
 
                     isPhoneCalling = false;
                 }
-
             }
         }
     }
+
 }

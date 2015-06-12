@@ -1,11 +1,13 @@
 package co.edu.udea.cmovil.gr1.blindcall;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -15,11 +17,13 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Parcelable;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -30,18 +34,13 @@ public class IntroActivity extends Activity {
     private IntentFilter[] mIntentFilters;
     private String[][] mNFCTechLists;
 
+    private static final int REQUEST_RECOGNIZE = 100;
+    IntroFragment introFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /*if (savedInstanceState == null) {
-            IntroFragment fragment = new IntroFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(android.R.id.content, fragment, fragment.getClass().getSimpleName());
-            fragmentTransaction.commit();
-        }*/
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -62,6 +61,65 @@ public class IntroActivity extends Activity {
         }
 
         mNFCTechLists = new String[][] { new String[] { NfcF.class.getName() } };
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,  "Tell me your name!");
+
+        try
+        {
+            startActivityForResult(intent, REQUEST_RECOGNIZE);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            //If no recoginizer is found, it will attempt to install it.
+            showDownloadingDialog();
+        }
+    }
+
+    public void showDownloadingDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Not Available");
+        builder.setMessage("There is no recognizition application installed." +
+                "Would you like to download one?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Download, for example, Google Voice Search
+                Intent marketIntent = new Intent(Intent.ACTION_VIEW);
+                marketIntent.setData(Uri.parse("market://details?" +
+                        "id=com.google.android.voicesearch"));
+            }
+
+        });
+        builder.setNegativeButton("No", null);
+        builder.create().show();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_RECOGNIZE && resultCode == Activity.RESULT_OK)
+        {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            StringBuilder sb = new StringBuilder();
+            for (String piece : matches)
+            {
+                sb.append(piece);
+                sb.append('\n');
+            }
+            //tv.setText(sb.toString());
+            introFragment.nuevaLLamada(sb.toString());
+            Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show();
+
+
+        }
+        else
+        {
+            Toast.makeText(this, "Operation Cancelled", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -88,76 +146,12 @@ public class IntroActivity extends Activity {
                 Log.e("TagDispatch", e.toString());
             }
         }
-        Toast toast = Toast.makeText(this, "telefono: " + s, Toast.LENGTH_SHORT);
 
+        Toast.makeText(this, "LLamando a telefono: " + s, Toast.LENGTH_LONG).show();
 
-        Toast.makeText(this, "LLamando...", Toast.LENGTH_SHORT).show();
-        //String url = "tel:3122782923";
-        //Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
-
-        PhoneCallListener phoneListener = new PhoneCallListener();
-        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
-
-        try{
-            intent =new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:"+s));
-            startActivity(intent);
-        }
-        catch(ActivityNotFoundException e){
-            toast = Toast.makeText(this, "No puedes hacer la llamada", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-        IntroFragment introFragment = (IntroFragment)getFragmentManager().findFragmentById(R.id.IntroFragment);
-        if (introFragment != null) {
-            // Call a method in the ArticleFragment to update its content
-            introFragment.nuevaLLamada(s);
-        }
-
+        introFragment = (IntroFragment)getFragmentManager().findFragmentById(R.id.IntroFragment);
+        introFragment.nuevaLLamada(s);
     }
-
-    //monitor phone call activities
-    private class PhoneCallListener extends PhoneStateListener {
-
-        private boolean isPhoneCalling = false;
-        String LOG_TAG = "LOGGING 123";
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-
-            if (TelephonyManager.CALL_STATE_RINGING == state) {
-                // phone ringing
-                Log.i(LOG_TAG, "RINGING, number: " + incomingNumber);
-            }
-
-            if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
-                // active
-                Log.i(LOG_TAG, "OFFHOOK");
-                isPhoneCalling = true;
-            }
-
-            if (TelephonyManager.CALL_STATE_IDLE == state) {
-                // run when class initial and phone call ended,
-                // need detect flag from CALL_STATE_OFFHOOK
-                Log.i(LOG_TAG, "IDLE");
-
-                if (isPhoneCalling) {
-
-                    Log.i(LOG_TAG, "restart app");
-
-                    // restart app
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-
-                    isPhoneCalling = false;
-                }
-
-            }
-        }
-    }
-
 
     @Override
     public void onResume() {
