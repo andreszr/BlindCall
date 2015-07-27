@@ -75,7 +75,6 @@ public class IntroActivity extends Activity {
                 Log.e("TagDispatch", e.toString());
             }
         }
-
         //Toast.makeText(this, "LLamando a telefono: " + s, Toast.LENGTH_LONG).show();
 
         introFragment = (IntroFragment)getFragmentManager().findFragmentById(R.id.IntroFragment);

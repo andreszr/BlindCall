@@ -63,14 +63,6 @@ public class IntroFragment extends Fragment{
                  arr[4] + arr[5] + arr[6] + " " + arr[7] + arr[8] + " " +
                  arr[9] + arr[10] + " ");
 
-        /*ttsManager.initQueue("LLamando al teléfono " + phone.charAt(0) + phone.charAt(1) + phone.charAt(2) + " " +
-            + phone.charAt(3) + phone.charAt(4) + phone.charAt(5) + " " + phone.charAt(6) + phone.charAt(7) + " " +
-            + phone.charAt(8) + phone.charAt(9) + " ");
-
-        Toast.makeText(getActivity(), "LLamando a telefono: " + phone.charAt(0) + " " + phone.charAt(1) + " " + phone.charAt(2) + " " +
-                + phone.charAt(3) + " " + phone.charAt(4) + " " + phone.charAt(5) + " " + phone.charAt(6) + " " + phone.charAt(7) + " " +
-                + phone.charAt(8) + " " + phone.charAt(9) + " ", Toast.LENGTH_LONG).show();*/
-
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
